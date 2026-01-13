@@ -1,0 +1,40 @@
+/* General Page Styling */
+body {
+    background-color: #f8f9fa;
+    /* Light grey background */
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+}
+
+/* Centering the forms vertically */
+.flex-container {
+    min-height: 100vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+/* Card Styling */
+.auth-card {
+    border: none;
+    border-radius: 12px;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+    background-color: #ffffff;
+    padding: 2rem;
+}
+
+.auth-card h3 {
+    font-weight: 700;
+    color: #333;
+    margin-bottom: 1.5rem;
+    text-align: center;
+}
+
+/* Button hover effect */
+.btn-primary {
+    transition: transform 0.2s, background-color 0.2s;
+}
+
+.btn-primary:hover {
+    transform: translateY(-2px);
+    background-color: #0056b3;
+}

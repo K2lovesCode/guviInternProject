@@ -1,0 +1,10 @@
+{
+    "require": {
+        "php": "^8.0",
+        "mongodb/mongodb": "^1.15",
+        "ext-mongodb": "*",
+        "ext-redis": "*",
+        "ext-pdo": "*",
+        "ext-json": "*"
+    }
+}
