@@ -1,11 +1,10 @@
-/* General Page Styling */
 body {
     background-color: #f8f9fa;
-    /* Light grey background */
+
     font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
 }
 
-/* Centering the forms vertically */
+
 .flex-container {
     min-height: 100vh;
     display: flex;
@@ -13,7 +12,7 @@ body {
     justify-content: center;
 }
 
-/* Card Styling */
+
 .auth-card {
     border: none;
     border-radius: 12px;
@@ -29,7 +28,7 @@ body {
     text-align: center;
 }
 
-/* Button hover effect */
+
 .btn-primary {
     transition: transform 0.2s, background-color 0.2s;
 }
@@ -37,4 +36,51 @@ body {
 .btn-primary:hover {
     transform: translateY(-2px);
     background-color: #0056b3;
+}
+
+
+body.landing-page {
+    font-family: sans-serif;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+    background-color: #f4f4f4;
+    margin: 0;
+}
+
+.landing-container {
+    text-align: center;
+    background: white;
+    padding: 2rem;
+    border-radius: 8px;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+}
+
+h1 {
+    color: #333;
+    margin-bottom: 1.5rem;
+}
+
+.btn {
+    display: inline-block;
+    padding: 10px 20px;
+    text-decoration: none;
+    color: white;
+    background: #007bff;
+    border-radius: 4px;
+    margin: 0 10px;
+    transition: background 0.3s;
+}
+
+.btn:hover {
+    background: #0056b3;
+}
+
+.btn-green {
+    background: #28a745;
+}
+
+.btn-green:hover {
+    background: #218838;
 }

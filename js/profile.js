@@ -7,13 +7,13 @@ $(document).ready(function () {
         window.location.href = 'login.html';
     });
 
-    // Fetch Profile via AJAX
+    //profile fetching
     $.ajax({
         url: 'php/profile.php',
         type: 'GET',
         data: { token: token },
         success: function (data) {
-            // Note: jQuery automatically parses JSON
+
             $('#age').val(data.age || '');
             $('#dob').val(data.dob || '');
             $('#contact').val(data.contact || '');
@@ -23,7 +23,7 @@ $(document).ready(function () {
         }
     });
 
-    // Update Profile Logic
+    // update profile logic
     $('#btnUpdate').click(function () {
         $.ajax({
             url: 'php/profile.php',

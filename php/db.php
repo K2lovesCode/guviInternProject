@@ -1,7 +1,7 @@
 <?php
-// db.php - Database connection manager
 
-// Load .env variables
+
+// load .env variables
 if (!file_exists(__DIR__.'/../.env')) {
     die(json_encode(['status' => 'error', 'message' => '.env file missing']));
 }
@@ -14,11 +14,11 @@ foreach (file(__DIR__.'/../.env', FILE_IGNORE_NEW_LINES | FILE_SKIP_EMPTY_LINES)
     }
 }
 
-// Headers
+// headers
 header('Content-Type: application/json');
 header("Access-Control-Allow-Origin: *");
 
-// MySQL Connection
+// mysql connection
 try {
     $pdo = new PDO(
         "mysql:host={$env['MYSQL_HOST']};port={$env['MYSQL_PORT']};dbname={$env['MYSQL_DB']}", 
@@ -30,9 +30,9 @@ try {
     die(json_encode(['status' => 'error', 'message' => 'Database Error: ' . $e->getMessage()]));
 }
 
-// MongoDB Connection
+// mongodb connection
 try {
-    // Use tlsInsecure which is more aggressive about ignoring SSL errors
+
     $mongoOptions = [
         'tlsInsecure' => true
     ];
@@ -47,12 +47,11 @@ try {
     $host = $env['REDIS_HOST'];
     $port = (int)$env['REDIS_PORT'];
 
-    // Handle TLS for Upstash
     if (isset($env['REDIS_TLS']) && $env['REDIS_TLS'] === 'true') {
         $host = 'tls://' . $host;
     }
 
-    // Connect
+    // connect
     if (!$redis->connect($host, $port)) {
         error_log("Redis connection failed to $host");
     }
