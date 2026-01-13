@@ -1,44 +1,66 @@
 <?php
-$env = parse_ini_file(__DIR__ . '/../.env');
+// db.php - Database connection manager
 
-// mysql connection (Aiven)
+// Load .env variables
+if (!file_exists(__DIR__.'/../.env')) {
+    die(json_encode(['status' => 'error', 'message' => '.env file missing']));
+}
+
+$env = [];
+foreach (file(__DIR__.'/../.env', FILE_IGNORE_NEW_LINES | FILE_SKIP_EMPTY_LINES) as $line) {
+    if ($line[0] !== '#' && strpos($line, '=') !== false) {
+        list($key, $value) = explode('=', $line, 2);
+        $env[trim($key)] = trim($value);
+    }
+}
+
+// Headers
+header('Content-Type: application/json');
+header("Access-Control-Allow-Origin: *");
+
+// MySQL Connection
 try {
     $pdo = new PDO(
         "mysql:host={$env['MYSQL_HOST']};port={$env['MYSQL_PORT']};dbname={$env['MYSQL_DB']}", 
         $env['MYSQL_USER'], 
         $env['MYSQL_PASS']
     );
+    $pdo->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
 } catch (PDOException $e) {
-    die("MySQL Error: " . $e->getMessage());
+    die(json_encode(['status' => 'error', 'message' => 'Database Error: ' . $e->getMessage()]));
 }
 
-// mongo db connection
+// MongoDB Connection
 try {
-   
-    $mongo = new MongoDB\Driver\Manager($env['MONGO_URI'], ['tlsInsecure' => true]);
-} catch (Exception $e) {
-    die("MongoDB Error: " . $e->getMessage());
-}
-
-//  Upstash (redis)connection
-try {
-    $redis = new Redis();
-    
-    // for deployment and localhosting
-    $isWin = strtoupper(substr(PHP_OS, 0, 3)) === 'WIN';
-    $ca = $isWin ? 'C:\php\cacert.pem' : '/etc/ssl/certs/ca-certificates.crt';
-
-    $options = [
-        'stream' => [
-            'cafile' => $ca,
-            'verify_peer' => true,
-        ]
+    // Use tlsInsecure which is more aggressive about ignoring SSL errors
+    $mongoOptions = [
+        'tlsInsecure' => true
     ];
-
-    $redis->connect('tls://' . $env['REDIS_HOST'], (int)$env['REDIS_PORT'], 2.5, null, 0, 0, $options);
-    $redis->auth($env['REDIS_PASS']);
+    $mongo = new MongoDB\Driver\Manager($env['MONGO_URI'], $mongoOptions);
 } catch (Exception $e) {
-    // error
-    error_log("Redis Error: " . $e->getMessage());
+    die(json_encode(['status' => 'error', 'message' => 'NoSQL Error: ' . $e->getMessage()]));
+}
+
+// Redis Connection
+try {
+    $redis = new Redis(); 
+    $host = $env['REDIS_HOST'];
+    $port = (int)$env['REDIS_PORT'];
+
+    // Handle TLS for Upstash
+    if (isset($env['REDIS_TLS']) && $env['REDIS_TLS'] === 'true') {
+        $host = 'tls://' . $host;
+    }
+
+    // Connect
+    if (!$redis->connect($host, $port)) {
+        error_log("Redis connection failed to $host");
+    }
+    
+    if (!empty($env['REDIS_PASS'])) {
+        $redis->auth($env['REDIS_PASS']);
+    }
+} catch (Exception $e) {
+    die(json_encode(['status' => 'error', 'message' => 'Redis Error: ' . $e->getMessage()]));
 }
 ?>
