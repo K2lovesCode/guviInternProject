@@ -1,17 +1,45 @@
 <?php
 
-
 // load .env variables
-if (!file_exists(__DIR__.'/../.env')) {
-    die(json_encode(['status' => 'error', 'message' => '.env file missing']));
+$envFile = __DIR__.'/../.env';
+$env = [];
+
+if (file_exists($envFile)) {
+    foreach (file($envFile, FILE_IGNORE_NEW_LINES | FILE_SKIP_EMPTY_LINES) as $line) {
+        $line = trim($line);
+        if ($line && $line[0] !== '#' && strpos($line, '=') !== false) {
+            list($key, $value) = explode('=', $line, 2);
+            $env[trim($key)] = trim($value);
+        }
+    }
 }
 
-$env = [];
-foreach (file(__DIR__.'/../.env', FILE_IGNORE_NEW_LINES | FILE_SKIP_EMPTY_LINES) as $line) {
-    if ($line[0] !== '#' && strpos($line, '=') !== false) {
-        list($key, $value) = explode('=', $line, 2);
-        $env[trim($key)] = trim($value);
+// helper
+function getEnvVar($key, $data) {
+    if (isset($data[$key])) return $data[$key];
+    $val = getenv($key);
+    return $val !== false ? $val : null;
+}
+
+// populate $env 
+$required_vars = [
+    'MYSQL_HOST', 'MYSQL_PORT', 'MYSQL_DB', 'MYSQL_USER', 'MYSQL_PASS',
+    'MONGO_URI',
+    'REDIS_HOST', 'REDIS_PORT', 'REDIS_PASS', 'REDIS_TLS'
+];
+
+foreach ($required_vars as $key) {
+    if (!isset($env[$key])) {
+        $val = getenv($key);
+        if ($val !== false) {
+            $env[$key] = $val;
+        }
     }
+}
+
+// check for critical variables
+if (empty($env['MYSQL_HOST'])) {
+    
 }
 
 // headers
