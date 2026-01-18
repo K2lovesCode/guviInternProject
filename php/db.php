@@ -24,7 +24,7 @@ function getEnvVar($key, $data) {
 // populate $env 
 $required_vars = [
     'MYSQL_HOST', 'MYSQL_PORT', 'MYSQL_DB', 'MYSQL_USER', 'MYSQL_PASS',
-    'MONGO_URI',
+    'MONGO_URI', 'MONGO_DB', 'MONGO_COLLECTION',
     'REDIS_HOST', 'REDIS_PORT', 'REDIS_PASS', 'REDIS_TLS'
 ];
 
