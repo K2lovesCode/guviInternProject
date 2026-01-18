@@ -1,2 +1,4 @@
 .env
+guvi-key.pem
+DEPLOYMENT_WALKTHROUGH.md
 vendor/
